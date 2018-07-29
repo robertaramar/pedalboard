@@ -1,0 +1,6 @@
+{
+    "sketch": "RS-1963.ino",
+    "port": "/dev/ttyUSB0",
+    "board": "arduino:avr:nano",
+    "configuration": "cpu=atmega328old"
+}
