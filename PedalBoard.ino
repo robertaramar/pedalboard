@@ -4,10 +4,9 @@
  * Author: robert.schneider@aramar.de
  */
 
-#include <Bounce2.h>
 #include <MIDI.h>
 #include <FastLED.h>
-#include "PedalButton.h"
+#include "PedalButton.hpp"
 
 #define BOARD_NANO 1
 #define BOARD_TEENSY 0
@@ -40,7 +39,6 @@
 
 #define VOLUME_PEDAL A3
 
-
 /**
  * LED related constants. The board has 10 numbered buttons, an up and down, a ctl and a mode button.
  * Makes a sum of 13 buttons that have LEDs. The mode button does not have an LED but a seven segment display.
@@ -65,58 +63,25 @@ MIDI_CREATE_DEFAULT_INSTANCE();
 // Define the array of leds
 CRGB leds[LED_COUNT];
 
+/**
+ * Array holds all button objects that need processing during loop.
+ */
+// PedalButton pedalButtons[BUTTON_COUNT];
+
 void setup()
 {
   FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, LED_COUNT);
   MIDI.begin();
+  for (int i = 0; i < BUTTON_COUNT; i++)
+  {
+    // pedalButtons[i].init();
+  }
 }
 
 void loop()
 {
-  if (MIDI.read()) // Is there a MIDI message incoming ?
+  for (int i = 0; i < BUTTON_COUNT; i++)
   {
-    switch (MIDI.getType()) // Get the type of the message we caught
-    {
-    case midi::ProgramChange: // If it is a Program Change,
-      leds[0] = CRGB::Yellow;
-      FastLED.show();
-      break;
-
-    case midi::NoteOn:
-      leds[0] = CRGB::Blue;
-      FastLED.show();
-      break;
-
-    case midi::NoteOff:
-      leds[0] = CRGB::Red;
-      FastLED.show();
-      break;
-
-    // See the online reference for other message types
-    default:
-      break;
-    }
+    // pedalButtons[i].loop();
   }
-
-  return;
-
-  // Turn the LED on, then pause
-  leds[0] = CRGB::Yellow;
-  FastLED.show();
-  delay(500);
-
-  // Turn the LED on, then pause
-  leds[0] = CRGB::Green;
-  FastLED.show();
-  delay(500);
-
-  // Turn the LED on, then pause
-  leds[0] = CRGB::Blue;
-  FastLED.show();
-  delay(500);
-
-  // Now turn the LED off, then pause
-  leds[0] = CRGB::Black;
-  FastLED.show();
-  delay(500);
 }
