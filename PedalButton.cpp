@@ -33,34 +33,34 @@ void PedalButton::loop()
     m_debouncer.update();
     if (m_debouncer.fell())
     {
-        if (m_buttonState == ButtonState.Up || m_buttonState == ButtonState.LongUp)
+        if (m_buttonState == Up || m_buttonState == LongUp)
         {
-            pedalButton.actOnDown();
+            actOnDown();
         }
-        m_buttonState = ButtonState.Down;
+        m_buttonState = Down;
     }
     else if (m_debouncer.rose())
     {
-        if (m_buttonState == ButtonState.Down)
+        if (m_buttonState == Down)
         {
-            pedalButton.actOnUp();
-            m_buttonState = ButtonState.Up;
+            actOnUp();
+            m_buttonState = Up;
         }
-        else if (m_buttonState == ButtonState.LongDown)
+        else if (m_buttonState == LongDown)
         {
-            pedalButton.actOnLongUp();
-            m_buttonState = ButtonState.LongUp;
+            actOnLongUp();
+            m_buttonState = LongUp;
         }
     }
     else
     {
         int state = m_debouncer.read();
-        if (state == LOW && m_buttonState != ButtonState.LongDown)
+        if (state == LOW && m_buttonState != LongDown)
         {
             if (m_debouncer.duration() >= LONG_BUTTON_PRESS_TIMEOUT)
             {
-                pedalButton.actOnLongDown();
-                m_buttonState = ButtonState.LongDown;
+                actOnLongDown();
+                m_buttonState = LongDown;
             }
         }
     }

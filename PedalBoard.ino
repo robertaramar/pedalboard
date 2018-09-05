@@ -7,6 +7,7 @@
 #include <MIDI.h>
 #include <FastLED.h>
 #include "PedalButton.hpp"
+#include "MomentaryButton.hpp"
 
 #define BOARD_NANO 1
 #define BOARD_TEENSY 0
@@ -21,7 +22,11 @@
  * Make a sum of 14 buttons.
  */
 
-#define BUTTON_COUNT 14
+#define BUTTON_COUNT 1
+
+/**
+ * Button pins
+ */
 #define BUTTON_MODE 2
 #define BUTTON_CTL 3
 #define BUTTON_BANK_UP 4
@@ -37,6 +42,9 @@
 #define BUTTON_09 14
 #define BUTTON_10 15
 
+/**
+ * Analog input pin for the volume pedal.
+ */
 #define VOLUME_PEDAL A3
 
 /**
@@ -63,6 +71,10 @@ MIDI_CREATE_DEFAULT_INSTANCE();
 // Define the array of leds
 CRGB leds[LED_COUNT];
 
+// PedalButton pedalButtons[BUTTON_COUNT];
+
+PedalButton *pedalButtons[BUTTON_COUNT];
+
 /**
  * Array holds all button objects that need processing during loop.
  */
@@ -72,9 +84,10 @@ void setup()
 {
   FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, LED_COUNT);
   MIDI.begin();
+  pedalButtons[0] = new MomentaryButton(BUTTON_01, LED_BUTTON_01);
   for (int i = 0; i < BUTTON_COUNT; i++)
   {
-    // pedalButtons[i].init();
+    pedalButtons[0]->init();
   }
 }
 
@@ -82,6 +95,6 @@ void loop()
 {
   for (int i = 0; i < BUTTON_COUNT; i++)
   {
-    // pedalButtons[i].loop();
+    pedalButtons[0]->loop();
   }
 }

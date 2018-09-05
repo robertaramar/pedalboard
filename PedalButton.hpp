@@ -5,6 +5,8 @@
  */
 #include <Bounce2.h>
 
+#pragma once
+
 enum ButtonState {
     Up        = 0x00, // button had been pressed
     Down      = 0x01, // button had been release from a short press
@@ -24,8 +26,8 @@ class PedalButton
     PedalButton(int8_t buttonPin, int8_t ledIndex);
     void init();
     void loop();
-    void actOnDown();
-    void actOnLongDown();
-    void actOnUp();
-    void actOnLongUp();
+    virtual void actOnDown() = 0;
+    virtual void actOnLongDown() = 0;
+    virtual void actOnUp() = 0;
+    virtual void actOnLongUp() = 0;
 };
