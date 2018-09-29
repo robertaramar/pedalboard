@@ -3,15 +3,19 @@
  * 
  * Author: robert.schneider@aramar.de
  */
+#include <FastLED.h>
+#include <ArduinoLog.h>
 #include "PedalButton.hpp"
 
 #define BOUNCE_INTERVAL 5              // ms
 #define LONG_BUTTON_PRESS_TIMEOUT 2000 // 2 seconds
 
-PedalButton::PedalButton(int8_t buttonPin, int8_t ledIndex)
+PedalButton::PedalButton(int8_t buttonPin, int8_t ledIndex, CRGB *leds)
 {
+    Log.verbose("Pedalbutton constructor"CR);
     m_buttonPin = buttonPin;
     m_ledIndex = ledIndex;
+    m_leds = leds;
 }
 
 /**
@@ -19,6 +23,7 @@ PedalButton::PedalButton(int8_t buttonPin, int8_t ledIndex)
      */
 void PedalButton::init()
 {
+    Log.verbose("Pedalbutton init"CR);
     pinMode(m_buttonPin, INPUT_PULLUP);
     m_debouncer = Bounce();
     m_debouncer.attach(m_buttonPin);

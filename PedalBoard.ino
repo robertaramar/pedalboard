@@ -6,6 +6,7 @@
 
 #include <MIDI.h>
 #include <FastLED.h>
+#include <ArduinoLog.h>
 #include "PedalButton.hpp"
 #include "MomentaryButton.hpp"
 
@@ -55,7 +56,7 @@
 #define LED_BUTTON_CTL 0
 #define LED_BUTTON_BANK_UP 1
 #define LED_BUTTON_BANK_DOWN 2
-#define LED_BUTTON_01 3
+#define LED_BUTTON_01 0
 #define LED_BUTTON_02 4
 #define LED_BUTTON_03 5
 #define LED_BUTTON_04 6
@@ -82,12 +83,31 @@ PedalButton *pedalButtons[BUTTON_COUNT];
 
 void setup()
 {
+  Serial.begin(115000);
+  while (!Serial && !Serial.available())
+  {
+  }
+  randomSeed(analogRead(0));
+  // Pass log level, whether to show log level, and print interface.
+  // Available levels are:
+  // LOG_LEVEL_SILENT, LOG_LEVEL_FATAL, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING, LOG_LEVEL_NOTICE, LOG_LEVEL_VERBOSE
+  // Note: if you want to fully remove all logging code, uncomment #define DISABLE_LOGGING in Logging.h
+  //       this will significantly reduce your project size
+
+  Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+
+  //Start logging
+  Log.verbose("setup starts"CR);
+
   FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, LED_COUNT);
-  MIDI.begin();
-  pedalButtons[0] = new MomentaryButton(BUTTON_01, LED_BUTTON_01);
+  leds[0] = CRGB::Blue;
+  FastLED.show();
+  
+  // MIDI.begin(); 
+  pedalButtons[0] = new MomentaryButton(BUTTON_01, LED_BUTTON_01, leds);
   for (int i = 0; i < BUTTON_COUNT; i++)
   {
-    pedalButtons[0]->init();
+    pedalButtons[i]->init();
   }
 }
 
@@ -95,6 +115,6 @@ void loop()
 {
   for (int i = 0; i < BUTTON_COUNT; i++)
   {
-    pedalButtons[0]->loop();
+    pedalButtons[i]->loop();
   }
 }

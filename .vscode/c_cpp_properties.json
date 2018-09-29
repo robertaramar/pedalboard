@@ -9,6 +9,17 @@
                 "/home/rschneid/Documents/Arduino/Sketches/hardware/tools/**",
                 "/home/rschneid/Documents/Arduino/Sketches/libraries/**"
             ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": false,
+                "path": [
+                    "${workspaceRoot}",
+                    "/home/rschneid/opt/arduino-1.8.5/hardware/tools/**",
+                    "/home/rschneid/opt/arduino-1.8.5/libraries/**",
+                    "/home/rschneid/Documents/Arduino/Sketches/hardware/tools/**",
+                    "/home/rschneid/opt/arduino/hardware/arduino/avr/cores/arduino",
+                    "/home/rschneid/Documents/Arduino/Sketches/libraries"
+                ]
+            },
             "intelliSenseMode": "clang-x64",
             "cStandard": "c11",
             "cppStandard": "c++17"

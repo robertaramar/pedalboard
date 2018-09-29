@@ -16,14 +16,16 @@ enum ButtonState {
 
 class PedalButton
 {
+protected:
     int8_t m_buttonPin; // physical pin of this button
     int8_t m_ledIndex;  // index into the LED array for this button
+    CRGB *m_leds;       // LED array
 
     Bounce m_debouncer;        // Bounce object to manage button
     ButtonState m_buttonState; // Current button state
 
   public:
-    PedalButton(int8_t buttonPin, int8_t ledIndex);
+    PedalButton(int8_t buttonPin, int8_t ledIndex, CRGB *leds);
     void init();
     void loop();
     virtual void actOnDown() = 0;
