@@ -7,6 +7,7 @@
 #include <MIDI.h>
 #include <FastLED.h>
 #include <ArduinoLog.h>
+#include <SoftwareSerial.h>
 #include "PedalButton.hpp"
 #include "MomentaryButton.hpp"
 
@@ -67,7 +68,8 @@
 #define LED_BUTTON_09 11
 #define LED_BUTTON_10 12
 
-MIDI_CREATE_DEFAULT_INSTANCE();
+SoftwareSerial softSerial(4, 5);
+MIDI_CREATE_INSTANCE(SoftwareSerial, softSerial, midiS);
 
 // Define the array of leds
 CRGB leds[LED_COUNT];
@@ -97,24 +99,40 @@ void setup()
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
 
   //Start logging
-  Log.verbose("setup starts"CR);
+  Log.verbose("setup starts" CR);
 
   FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, LED_COUNT);
-  leds[0] = CRGB::Blue;
+  leds[0] = CRGB::Black;
   FastLED.show();
-  
-  // MIDI.begin(); 
-  pedalButtons[0] = new MomentaryButton(BUTTON_01, LED_BUTTON_01, leds);
+
+  midiS.setHandleNoteOn(handleNoteOn);
+  midiS.begin(MIDI_CHANNEL_OMNI);
+  pedalButtons[0] = new MomentaryButton(BUTTON_01, LED_BUTTON_01);
   for (int i = 0; i < BUTTON_COUNT; i++)
   {
     pedalButtons[i]->init();
   }
 }
 
+void handleNoteOn(byte channel, byte note, byte velocity)
+{
+  Log.verbose("Received note on %d on channel %d with velocity %d" CR, note, channel, velocity);
+}
+
 void loop()
 {
+  midiS.read();
   for (int i = 0; i < BUTTON_COUNT; i++)
   {
     pedalButtons[i]->loop();
   }
+}
+
+/**
+ * Global method to change LED colors, used by the button methods.
+ */
+void switchLED(int ledIndex, CRGB::HTMLColorCode colorCode)
+{
+  leds[ledIndex] = colorCode;
+  FastLED.show();
 }
