@@ -1,27 +1,30 @@
 /**
  * Arduino/TeensyLC program to act as a pedal controller to a MIDI keyboard.
- * 
+ *
  * Author: robert.schneider@aramar.de
  */
 
 #include <MIDI.h>
-#include <FastLED.h>
+#define FASTLED_INTERNAL
 #include <ArduinoLog.h>
+#include <FastLED.h>
 #include <SoftwareSerial.h>
-#include "PedalButton.hpp"
+#include "DrumtrackButton.hpp"
 #include "MomentaryButton.hpp"
+#include "PedalButton.hpp"
 
 #define BOARD_NANO 1
 #define BOARD_TEENSY 0
 
-// For led chips like Neopixels, which have a data line, ground, and power, you just
-// need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
-// ground, and power), like the LPD8806 define both DATA_PIN and CLOCK_PIN
+// For led chips like Neopixels, which have a data line, ground, and power, you
+// just need to define DATA_PIN.  For led chipsets that are SPI based (four
+// wires - data, clock, ground, and power), like the LPD8806 define both
+// DATA_PIN and CLOCK_PIN
 #define LED_DATA_PIN 16
 
 /**
- * Button related constants. The board has 10 numbered buttons, an up and down, a ctl and a mode button.
- * Make a sum of 14 buttons.
+ * Button related constants. The board has 10 numbered buttons, an up and down,
+ * a ctl and a mode button. Make a sum of 14 buttons.
  */
 
 #define BUTTON_COUNT 1
@@ -50,8 +53,9 @@
 #define VOLUME_PEDAL A3
 
 /**
- * LED related constants. The board has 10 numbered buttons, an up and down, a ctl and a mode button.
- * Makes a sum of 13 buttons that have LEDs. The mode button does not have an LED but a seven segment display.
+ * LED related constants. The board has 10 numbered buttons, an up and down, a
+ * ctl and a mode button. Makes a sum of 13 buttons that have LEDs. The mode
+ * button does not have an LED but a seven segment display.
  */
 #define LED_COUNT 1
 #define LED_BUTTON_CTL 0
@@ -83,22 +87,21 @@ PedalButton *pedalButtons[BUTTON_COUNT];
  */
 // PedalButton pedalButtons[BUTTON_COUNT];
 
-void setup()
-{
+void setup() {
   Serial.begin(115000);
-  while (!Serial && !Serial.available())
-  {
+  while (!Serial && !Serial.available()) {
   }
   randomSeed(analogRead(0));
   // Pass log level, whether to show log level, and print interface.
   // Available levels are:
-  // LOG_LEVEL_SILENT, LOG_LEVEL_FATAL, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING, LOG_LEVEL_NOTICE, LOG_LEVEL_VERBOSE
-  // Note: if you want to fully remove all logging code, uncomment #define DISABLE_LOGGING in Logging.h
+  // LOG_LEVEL_SILENT, LOG_LEVEL_FATAL, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING,
+  // LOG_LEVEL_NOTICE, LOG_LEVEL_VERBOSE Note: if you want to fully remove all
+  // logging code, uncomment #define DISABLE_LOGGING in Logging.h
   //       this will significantly reduce your project size
 
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
 
-  //Start logging
+  // Start logging
   Log.verbose("setup starts" CR);
 
   FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, LED_COUNT);
@@ -106,33 +109,36 @@ void setup()
   FastLED.show();
 
   midiS.setHandleNoteOn(handleNoteOn);
+  midiS.setHandleClock(handleClock);
   midiS.begin(MIDI_CHANNEL_OMNI);
-  pedalButtons[0] = new MomentaryButton(BUTTON_01, LED_BUTTON_01);
-  for (int i = 0; i < BUTTON_COUNT; i++)
-  {
+  pedalButtons[0] = new DrumtrackButton(BUTTON_01, LED_BUTTON_01);
+  for (int i = 0; i < BUTTON_COUNT; i++) {
     pedalButtons[i]->init();
   }
 }
 
-void handleNoteOn(byte channel, byte note, byte velocity)
-{
-  Log.verbose("Received note on %d on channel %d with velocity %d" CR, note, channel, velocity);
+void loop() {
+  midiS.read();
+  for (int i = 0; i < BUTTON_COUNT; i++) {
+    pedalButtons[i]->loop();
+  }
 }
 
-void loop()
-{
-  midiS.read();
-  for (int i = 0; i < BUTTON_COUNT; i++)
-  {
-    pedalButtons[i]->loop();
+void handleNoteOn(byte channel, byte note, byte velocity) {
+  Log.verbose("Received note on %d on channel %d with velocity %d" CR, note,
+              channel, velocity);
+}
+
+void handleClock() {
+  for (int i = 0; i < BUTTON_COUNT; i++) {
+      pedalButtons[i]->actOnClock();
   }
 }
 
 /**
  * Global method to change LED colors, used by the button methods.
  */
-void switchLED(int ledIndex, CRGB::HTMLColorCode colorCode)
-{
+void switchLED(int ledIndex, CRGB::HTMLColorCode colorCode) {
   leds[ledIndex] = colorCode;
   FastLED.show();
 }
