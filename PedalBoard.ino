@@ -4,15 +4,12 @@
  * Author: robert.schneider@aramar.de
  */
 
-#include <MIDI.h>
-#define FASTLED_INTERNAL
-#include <ArduinoLog.h>
-#include <FastLED.h>
-#include <SoftwareSerial.h>
+#include "PedalBoard.h"
 #include "DrumtrackButton.hpp"
 #include "KarmaSceneButton.hpp"
 #include "MomentaryButton.hpp"
 #include "PedalButton.hpp"
+#include "ProgramChangeButton.hpp"
 
 #define BOARD_NANO 1
 #define BOARD_TEENSY 0
@@ -28,7 +25,7 @@
  * a ctl and a mode button. Make a sum of 14 buttons.
  */
 
-#define BUTTON_COUNT 1
+#define BUTTON_COUNT 2
 
 /**
  * Button pins
@@ -59,23 +56,24 @@
  * button does not have an LED but a seven segment display.
  */
 #define BRIGHTNESS 64
-#define LED_COUNT 1
-#define LED_BUTTON_CTL 0
-#define LED_BUTTON_BANK_UP 1
-#define LED_BUTTON_BANK_DOWN 2
+#define LED_COUNT 2
 #define LED_BUTTON_01 0
-#define LED_BUTTON_02 4
-#define LED_BUTTON_03 5
-#define LED_BUTTON_04 6
-#define LED_BUTTON_05 7
-#define LED_BUTTON_06 8
-#define LED_BUTTON_07 9
-#define LED_BUTTON_08 10
-#define LED_BUTTON_09 11
-#define LED_BUTTON_10 12
+#define LED_BUTTON_02 1
+#define LED_BUTTON_03 2
+#define LED_BUTTON_04 3
+#define LED_BUTTON_05 4
+#define LED_BUTTON_06 5
+#define LED_BUTTON_07 6
+#define LED_BUTTON_08 7
+#define LED_BUTTON_09 8
+#define LED_BUTTON_10 9
+#define LED_BUTTON_CTL 10
+#define LED_BUTTON_BANK_UP 11
+#define LED_BUTTON_BANK_DOWN 12
 
-SoftwareSerial softSerial(4, 5);
-MIDI_CREATE_INSTANCE(SoftwareSerial, softSerial, midiS);
+//SoftwareSerial softSerial(4, 5);
+// MIDI_CREATE_INSTANCE(SoftwareSerial, softSerial, midiS);
+MIDI_CREATE_INSTANCE(HardwareSerial, Serial, midiS);
 
 // Define the array of leds
 CRGB leds[LED_COUNT];
@@ -108,16 +106,26 @@ void setup() {
 
   FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, LED_COUNT);
   leds[0] = CRGB::Black;
+  leds[1] = CRGB::Black;
   FastLED.setBrightness(BRIGHTNESS);
   FastLED.show();
 
   midiS.setHandleNoteOn(handleNoteOn);
   midiS.setHandleClock(handleClock);
+  midiS.setHandleProgramChange(handleProgramChange);
+  midiS.setHandleControlChange(handleControlChange);
+
   midiS.begin(MIDI_CHANNEL_OMNI);
-  pedalButtons[0] = new DrumtrackButton(BUTTON_01, LED_BUTTON_01);
-  // pedalButtons[0] = new KarmaSceneButton(KarmaSwitchMode::KarmaUp, 4,
-  // BUTTON_01,
-  //                                       LED_BUTTON_01);
+
+  /* pedalButtons[0] = new DrumtrackButton(BUTTON_01, LED_BUTTON_01);
+  pedalButtons[0] = new KarmaSceneButton(KarmaSwitchMode::KarmaUp, 4, BUTTON_01,
+                                         LED_BUTTON_01);
+  pedalButtons[1] = new KarmaSceneButton(KarmaSwitchMode::KarmaDown, 4,
+                                         BUTTON_02, LED_BUTTON_02); */
+  pedalButtons[0] = new ProgramChangeButton(ProgramChangeMode::ProgramUp, 4,
+                                            BUTTON_01, LED_BUTTON_01);
+  pedalButtons[1] = new ProgramChangeButton(ProgramChangeMode::ProgramDown, 4,
+                                            BUTTON_02, LED_BUTTON_02);
   for (int i = 0; i < BUTTON_COUNT; i++) {
     pedalButtons[i]->init();
   }
@@ -141,10 +149,24 @@ void handleClock() {
   }
 }
 
+void handleProgramChange(byte channel, byte number) {
+  for (int i = 0; i < BUTTON_COUNT; i++) {
+    pedalButtons[i]->actOnProgramChange(channel, number);
+  }
+}
+
+void handleControlChange(byte channel, byte number, byte value) {
+  for (int i = 0; i < BUTTON_COUNT; i++) {
+    pedalButtons[i]->actOnControlChange(channel, number, value);
+  }
+}
+
 /**
  * Global method to change LED colors, used by the button methods.
  */
-void switchLED(int ledIndex, CRGB::HTMLColorCode colorCode) {
-  leds[ledIndex] = colorCode;
-  FastLED.show();
+void switchLED(int ledIndex, CRGB colorCode) {
+  if (leds[ledIndex] != colorCode) {
+    leds[ledIndex] = colorCode;
+    FastLED.show();
+  }
 }

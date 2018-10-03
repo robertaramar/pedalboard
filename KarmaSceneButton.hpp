@@ -5,7 +5,7 @@
  * Author: robert.schneider@aramar.de
  */
 #pragma once
-
+#include "PedalBoard.h"
 #include "PedalButton.hpp"
 
 enum KarmaSwitchMode { KarmaUp, KarmaDown, KarmaScene };
@@ -16,9 +16,11 @@ class KarmaSceneButton : public PedalButton {
   static byte m_karmaSwitchSysEx[];
   // LED colors for different Karma scenes.
   static CRGB::HTMLColorCode m_colorCodes[];
+  // Current scene needs to be static, in order to sync up and down buttons.
+  static int8_t m_currentScene;
+
   KarmaSwitchMode m_switchMode = KarmaSwitchMode::KarmaUp;
   int8_t m_fixedScene = 0;
-  int8_t m_currentScene = 0;
 
  public:
   KarmaSceneButton(KarmaSwitchMode mode, int8_t fixedScene, int8_t buttonPin, int8_t ledIndex);
@@ -27,7 +29,9 @@ class KarmaSceneButton : public PedalButton {
   void actOnUp();
   void actOnLongUp();
   void actOnClock();
+  void actOnProgramChange(byte channel, byte number);
+  void actOnControlChange(byte channel, byte number, byte value);
 
  private:
-  void KarmaSceneButton::switchKarmaScene();
+  void switchKarmaScene();
 };

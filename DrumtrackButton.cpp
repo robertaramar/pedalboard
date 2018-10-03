@@ -4,11 +4,6 @@
  *
  * Author: robert.schneider@aramar.de
  */
-#include <ArduinoLog.h>
-#define FASTLED_INTERNAL
-#include <FastLED.h>
-#include <MIDI.h>
-#include <SoftwareSerial.h>
 #include "DrumtrackButton.hpp"
 #include "PedalBoard.h"
 
@@ -40,6 +35,25 @@ void DrumtrackButton::actOnLongUp() {
   switchDrumTrack(false);
 }
 
+void DrumtrackButton::actOnClock() {
+  if (m_isRunning) {
+    if (m_currentClock++ == 0) {
+      switchLED(m_ledIndex, m_currentColorCode);
+    }
+    if (m_currentClock == 6) {
+      switchLED(m_ledIndex, CRGB::Black);
+    }
+    if (m_currentClock >= 24) {
+      m_currentClock = 0;
+    }
+  }
+}
+
+void DrumtrackButton::actOnProgramChange(byte channel, byte number) {}
+
+void DrumtrackButton::actOnControlChange(byte channel, byte number,
+                                         byte value) {}
+
 void DrumtrackButton::switchDrumTrack(boolean on) {
   if (on) {
     m_drumTrackSysEx[sizeof(m_drumTrackSysEx) - 1] = 0x01;
@@ -53,18 +67,4 @@ void DrumtrackButton::switchDrumTrack(boolean on) {
     switchLED(m_ledIndex, CRGB::Black);
   }
   m_isRunning = on;
-}
-
-void DrumtrackButton::actOnClock() {
-  if (m_isRunning) {
-    if (m_currentClock++ == 0) {
-      switchLED(m_ledIndex, m_currentColorCode);
-    }
-    if (m_currentClock == 6) {
-      switchLED(m_ledIndex, CRGB::Black);
-    }
-    if (m_currentClock >= 24) {
-      m_currentClock = 0;
-    }
-  }
 }

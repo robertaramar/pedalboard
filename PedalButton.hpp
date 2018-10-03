@@ -31,4 +31,6 @@ class PedalButton {
   virtual void actOnUp() = 0;
   virtual void actOnLongUp() = 0;
   virtual void actOnClock() = 0;
+  virtual void actOnProgramChange(byte channel, byte number) = 0;
+  virtual void actOnControlChange(byte channel, byte number, byte value) = 0;
 };

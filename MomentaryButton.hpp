@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include "PedalBoard.h"
 #include "PedalButton.hpp"
 class MomentaryButton : public PedalButton {
  public:
@@ -14,4 +15,7 @@ class MomentaryButton : public PedalButton {
   void actOnLongDown();
   void actOnUp();
   void actOnLongUp();
+  void actOnClock();
+  void actOnProgramChange(byte channel, byte number);
+  void actOnControlChange(byte channel, byte number, byte value);
 };

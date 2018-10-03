@@ -3,10 +3,8 @@
  *
  * Author: robert.schneider@aramar.de
  */
-#define FASTLED_INTERNAL
 #include "PedalButton.hpp"
-#include <ArduinoLog.h>
-#include <FastLED.h>
+#include "PedalBoard.h"
 
 #define BOUNCE_INTERVAL 5               // ms
 #define LONG_BUTTON_PRESS_TIMEOUT 2000  // 2 seconds

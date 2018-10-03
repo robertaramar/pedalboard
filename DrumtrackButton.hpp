@@ -6,6 +6,7 @@
  */
 #pragma once
 
+#include "PedalBoard.h"
 #include "PedalButton.hpp"
 
 class DrumtrackButton : public PedalButton {
@@ -25,6 +26,8 @@ class DrumtrackButton : public PedalButton {
   void actOnUp();
   void actOnLongUp();
   void actOnClock();
+  void actOnProgramChange(byte channel, byte number);
+  void actOnControlChange(byte channel, byte number, byte value);
 
  private:
   void DrumtrackButton::switchDrumTrack(boolean on);

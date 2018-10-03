@@ -4,14 +4,8 @@
  *
  * Author: robert.schneider@aramar.de
  */
-#include <ArduinoLog.h>
-#define FASTLED_INTERNAL
-#include <FastLED.h>
-#include <MIDI.h>
-#include <SoftwareSerial.h>
 #include "MomentaryButton.hpp"
 #include "PedalBoard.h"
-#include "PedalButton.hpp"
 
 MomentaryButton::MomentaryButton(int8_t buttonPin, int8_t ledIndex)
     : PedalButton(buttonPin, ledIndex) {
@@ -39,3 +33,10 @@ void MomentaryButton::actOnLongUp() {
   Log.verbose("%l MomentaryButton actOnLongUp" CR, millis());
   switchLED(m_ledIndex, CRGB::Yellow);
 }
+
+void MomentaryButton::actOnClock() {}
+
+void MomentaryButton::actOnProgramChange(byte channel, byte number) {}
+
+void MomentaryButton::actOnControlChange(byte channel, byte number,
+                                         byte value) {}

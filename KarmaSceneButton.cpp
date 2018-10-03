@@ -4,11 +4,6 @@
  *
  * Author: robert.schneider@aramar.de
  */
-#include <ArduinoLog.h>
-#define FASTLED_INTERNAL
-#include <FastLED.h>
-#include <MIDI.h>
-#include <SoftwareSerial.h>
 #include "KarmaSceneButton.hpp"
 #include "PedalBoard.h"
 
@@ -20,6 +15,8 @@ byte KarmaSceneButton::m_karmaSwitchSysEx[] = {
 CRGB::HTMLColorCode KarmaSceneButton::m_colorCodes[] = {
     CRGB::Red,    CRGB::Green,  CRGB::Blue,      CRGB::Yellow,
     CRGB::Violet, CRGB::Salmon, CRGB::Chocolate, CRGB::Orange};
+
+int8_t KarmaSceneButton::m_currentScene = 0;
 
 KarmaSceneButton::KarmaSceneButton(KarmaSwitchMode mode, int8_t fixedScene,
                                    int8_t buttonPin, int8_t ledIndex)
@@ -49,7 +46,12 @@ void KarmaSceneButton::actOnLongUp() {
 }
 
 void KarmaSceneButton::actOnClock() {
+  switchLED(m_ledIndex, m_colorCodes[m_currentScene]);
 }
+
+void KarmaSceneButton::actOnProgramChange(byte channel, byte number) {}
+
+void KarmaSceneButton::actOnControlChange(byte channel, byte number, byte value) {}
 
 void KarmaSceneButton::switchKarmaScene() {
   switch (m_switchMode) {
@@ -72,11 +74,9 @@ void KarmaSceneButton::switchKarmaScene() {
     m_currentScene = 0;
   }
 
-  Log.verbose("%l KarmaSceneButton swtich to scene %d" CR, millis(),
+  Log.verbose("%l KarmaSceneButton switch to scene %d" CR, millis(),
               m_currentScene);
 
   m_karmaSwitchSysEx[sizeof(m_karmaSwitchSysEx) - 1] = m_currentScene;
   midiS.sendSysEx(sizeof(m_karmaSwitchSysEx), m_karmaSwitchSysEx);
-
-  switchLED(m_ledIndex, m_colorCodes[m_currentScene]);
 }
