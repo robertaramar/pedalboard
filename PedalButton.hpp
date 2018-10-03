@@ -30,5 +30,5 @@ class PedalButton {
   virtual void actOnLongDown() = 0;
   virtual void actOnUp() = 0;
   virtual void actOnLongUp() = 0;
-  virtual void actOnClock() {}
+  virtual void actOnClock() = 0;
 };

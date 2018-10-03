@@ -10,6 +10,7 @@
 #include <FastLED.h>
 #include <SoftwareSerial.h>
 #include "DrumtrackButton.hpp"
+#include "KarmaSceneButton.hpp"
 #include "MomentaryButton.hpp"
 #include "PedalButton.hpp"
 
@@ -57,6 +58,7 @@
  * ctl and a mode button. Makes a sum of 13 buttons that have LEDs. The mode
  * button does not have an LED but a seven segment display.
  */
+#define BRIGHTNESS 64
 #define LED_COUNT 1
 #define LED_BUTTON_CTL 0
 #define LED_BUTTON_BANK_UP 1
@@ -106,12 +108,16 @@ void setup() {
 
   FastLED.addLeds<WS2811, LED_DATA_PIN, RGB>(leds, LED_COUNT);
   leds[0] = CRGB::Black;
+  FastLED.setBrightness(BRIGHTNESS);
   FastLED.show();
 
   midiS.setHandleNoteOn(handleNoteOn);
   midiS.setHandleClock(handleClock);
   midiS.begin(MIDI_CHANNEL_OMNI);
   pedalButtons[0] = new DrumtrackButton(BUTTON_01, LED_BUTTON_01);
+  // pedalButtons[0] = new KarmaSceneButton(KarmaSwitchMode::KarmaUp, 4,
+  // BUTTON_01,
+  //                                       LED_BUTTON_01);
   for (int i = 0; i < BUTTON_COUNT; i++) {
     pedalButtons[i]->init();
   }
@@ -131,7 +137,7 @@ void handleNoteOn(byte channel, byte note, byte velocity) {
 
 void handleClock() {
   for (int i = 0; i < BUTTON_COUNT; i++) {
-      pedalButtons[i]->actOnClock();
+    pedalButtons[i]->actOnClock();
   }
 }
 
