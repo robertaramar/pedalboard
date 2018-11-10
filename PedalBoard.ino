@@ -4,10 +4,10 @@
  * Author: robert.schneider@aramar.de
  */
 
-#include "PedalBoard.h"
 #include "DrumtrackButton.hpp"
 #include "KarmaSceneButton.hpp"
 #include "MomentaryButton.hpp"
+#include "PedalBoard.h"
 #include "PedalButton.hpp"
 #include "ProgramChangeButton.hpp"
 
@@ -71,9 +71,14 @@
 #define LED_BUTTON_BANK_UP 11
 #define LED_BUTTON_BANK_DOWN 12
 
-//SoftwareSerial softSerial(4, 5);
-// MIDI_CREATE_INSTANCE(SoftwareSerial, softSerial, midiS);
+#if SOFTWARE_SERIAL
+SoftwareSerial softSerial(4, 5);  // receive on 4, transmit on 5
+#pragma "SoftwareSerial is on"
+MIDI_CREATE_INSTANCE(SoftwareSerial, softSerial, midiS);
+#else
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial, midiS);
+#pragma "HardwareSerial is on"
+#endif
 
 // Define the array of leds
 CRGB leds[LED_COUNT];
@@ -88,18 +93,25 @@ PedalButton *pedalButtons[BUTTON_COUNT];
 // PedalButton pedalButtons[BUTTON_COUNT];
 
 void setup() {
+#if SOFTWARE_SERIAL
   Serial.begin(115000);
   while (!Serial && !Serial.available()) {
   }
+#endif
+
   randomSeed(analogRead(0));
+
   // Pass log level, whether to show log level, and print interface.
   // Available levels are:
   // LOG_LEVEL_SILENT, LOG_LEVEL_FATAL, LOG_LEVEL_ERROR, LOG_LEVEL_WARNING,
   // LOG_LEVEL_NOTICE, LOG_LEVEL_VERBOSE Note: if you want to fully remove all
   // logging code, uncomment #define DISABLE_LOGGING in Logging.h
   //       this will significantly reduce your project size
-
+#if SOFTWARE_SERIAL
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+#else
+  Log.begin(LOG_LEVEL_SILENT, &Serial);
+#endif
 
   // Start logging
   Log.verbose("setup starts" CR);
@@ -117,18 +129,23 @@ void setup() {
 
   midiS.begin(MIDI_CHANNEL_OMNI);
 
-  /* pedalButtons[0] = new DrumtrackButton(BUTTON_01, LED_BUTTON_01);
+  // pedalButtons[0] = new DrumtrackButton(BUTTON_01, LED_BUTTON_01);
+
   pedalButtons[0] = new KarmaSceneButton(KarmaSwitchMode::KarmaUp, 4, BUTTON_01,
                                          LED_BUTTON_01);
   pedalButtons[1] = new KarmaSceneButton(KarmaSwitchMode::KarmaDown, 4,
-                                         BUTTON_02, LED_BUTTON_02); */
+                                         BUTTON_02, LED_BUTTON_02);
+  /*
   pedalButtons[0] = new ProgramChangeButton(ProgramChangeMode::ProgramUp, 4,
                                             BUTTON_01, LED_BUTTON_01);
   pedalButtons[1] = new ProgramChangeButton(ProgramChangeMode::ProgramDown, 4,
                                             BUTTON_02, LED_BUTTON_02);
+  */
   for (int i = 0; i < BUTTON_COUNT; i++) {
     pedalButtons[i]->init();
   }
+
+  Log.verbose("setup done" CR);
 }
 
 void loop() {

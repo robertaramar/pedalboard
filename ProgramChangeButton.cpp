@@ -70,19 +70,22 @@ void ProgramChangeButton::switchProgram() {
   switch (m_switchMode) {
     case ProgramUp:
       m_currentProgram++;
+      if (m_currentProgram < 0) {
+        m_currentProgram = 0;
+      }
       break;
     case ProgramDown:
       m_currentProgram--;
+      if (m_currentProgram < 0) {
+        m_currentProgram = 127;
+      }
       break;
     case ProgramNumber:
       m_currentProgram = m_fixedProgram;
   }
 
-  if (m_currentProgram > 127) {
+  if (m_currentProgram < 0 || m_currentProgram > 127) {
     m_currentProgram == 0;
-  }
-  if (m_currentProgram < 0) {
-    m_currentProgram = 127;
   }
 
   midiS.sendControlChange(0, m_currentBank, KRONOS_CHANNEL);

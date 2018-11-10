@@ -17,9 +17,18 @@
 #define KRONOS_CHANNEL 1
 
 /**
+ * Switch on/off software serial to use/not use serial console
+ */
+#define SOFTWARE_SERIAL 1
+
+/**
  * MIDI object to send/receive MIDI data.
  */
+#if SOFTWARE_SERIAL
+extern midi::MidiInterface<SoftwareSerial> midiS;
+#else
 extern midi::MidiInterface<HardwareSerial> midiS;
+#endif
 
 /**
  * Utility method to change the color of an LED (use CRGB::Black to switch off)
