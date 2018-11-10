@@ -19,7 +19,7 @@
 /**
  * Switch on/off software serial to use/not use serial console
  */
-#define SOFTWARE_SERIAL 1
+#define SOFTWARE_SERIAL 0
 
 /**
  * MIDI object to send/receive MIDI data.

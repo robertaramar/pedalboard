@@ -7,10 +7,11 @@
 #include "KarmaSceneButton.hpp"
 #include "PedalBoard.h"
 
+// Not used any longer, using CC85 now
 // SysEx to switch to a different Karma scene. Last byte holds the Karma scene
 // number (0 - 7).
-byte KarmaSceneButton::m_karmaSwitchSysEx[] = {
-    0x42, 0x30, 0x68, 0x6d, 0x02, 0x00, 0x00, 0x2f, 0x00, 0x00, 0x00, 0x00};
+//byte KarmaSceneButton::m_karmaSwitchSysEx[] = {
+//    0x42, 0x30, 0x68, 0x6d, 0x02, 0x00, 0x00, 0x2f, 0x00, 0x00, 0x00, 0x00};
 
 CRGB::HTMLColorCode KarmaSceneButton::m_colorCodes[] = {
     CRGB::Red,    CRGB::Green,  CRGB::Blue,      CRGB::Yellow,
@@ -51,7 +52,11 @@ void KarmaSceneButton::actOnClock() {
 
 void KarmaSceneButton::actOnProgramChange(byte channel, byte number) {}
 
-void KarmaSceneButton::actOnControlChange(byte channel, byte number, byte value) {}
+void KarmaSceneButton::actOnControlChange(byte channel, byte number, byte value) {
+  if (channel == KRONOS_CHANNEL && number == 85) {
+    m_currentScene = value;
+  }
+}
 
 void KarmaSceneButton::switchKarmaScene() {
   switch (m_switchMode) {
@@ -78,5 +83,6 @@ void KarmaSceneButton::switchKarmaScene() {
               m_currentScene);
 
   m_karmaSwitchSysEx[sizeof(m_karmaSwitchSysEx) - 1] = m_currentScene;
-  midiS.sendSysEx(sizeof(m_karmaSwitchSysEx), m_karmaSwitchSysEx);
+  midiS.sendControlChange(85, m_currentScene, KRONOS_CHANNEL);
+  // midiS.sendSysEx(sizeof(m_karmaSwitchSysEx), m_karmaSwitchSysEx);
 }
