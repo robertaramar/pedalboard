@@ -30,5 +30,5 @@ class DrumtrackButton : public PedalButton {
   void actOnControlChange(byte channel, byte number, byte value);
 
  private:
-  void DrumtrackButton::switchDrumTrack(boolean on);
+  void switchDrumTrack(boolean on);
 };

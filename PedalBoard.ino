@@ -48,7 +48,7 @@
 /**
  * Analog input pin for the volume pedal.
  */
-#define VOLUME_PEDAL A3
+#define VOLUME_PEDAL A2
 
 /**
  * LED related constants. The board has 10 numbered buttons, an up and down, a

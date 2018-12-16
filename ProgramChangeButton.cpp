@@ -85,7 +85,7 @@ void ProgramChangeButton::switchProgram() {
   }
 
   if (m_currentProgram < 0 || m_currentProgram > 127) {
-    m_currentProgram == 0;
+    m_currentProgram = 0;
   }
 
   midiS.sendControlChange(0, m_currentBank, KRONOS_CHANNEL);
