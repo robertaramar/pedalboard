@@ -8,7 +8,7 @@ refurnished with RGB-LEDs (PL9823-F5 aka WS2812 B).
 
 The pin layout is as follows:
 
-PIN|Usage|Connection
---------------------
-01|MIDI RX|DIN5 MIDI Input
-02|MIDI TX|DIN5 MIDI Output
+|PIN|Usage|Connection|
+|---|---|---|
+|01|MIDI RX|DIN5 MIDI Input|
+|02|MIDI TX|DIN5 MIDI Output|
