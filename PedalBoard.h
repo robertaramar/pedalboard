@@ -6,7 +6,7 @@
 #pragma once
 #include <MIDI.h>
 #define FASTLED_INTERNAL
-#define DISABLE_LOGGING
+//#define DISABLE_LOGGING
 #include <ArduinoLog.h>
 #include <FastLED.h>
 #include <SoftwareSerial.h>
@@ -19,7 +19,7 @@
 /**
  * Switch on/off software serial to use/not use serial console
  */
-#define SOFTWARE_SERIAL 0
+#define SOFTWARE_SERIAL 1
 
 /**
  * MIDI object to send/receive MIDI data.
@@ -33,4 +33,5 @@ extern midi::MidiInterface<HardwareSerial> midiS;
 /**
  * Utility method to change the color of an LED (use CRGB::Black to switch off)
  */
-void switchLED(int ledIndex, CRGB colorCode);
+void switchLed(int ledIndex, CRGB colorCode);
+void switchLedRgb(int ledIndex, CRGB colorCode);

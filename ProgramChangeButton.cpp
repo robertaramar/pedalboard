@@ -22,7 +22,7 @@ ProgramChangeButton::ProgramChangeButton(ProgramChangeMode mode,
 
 void ProgramChangeButton::actOnDown() {
   Log.verbose("%l ProgramChangeButton actOnDown" CR, millis());
-  switchLED(m_ledIndex, CRGB::Red);
+  switchLed(m_ledIndex, CRGB::Red);
   switchProgram();
 }
 
@@ -32,12 +32,12 @@ void ProgramChangeButton::actOnLongDown() {
 
 void ProgramChangeButton::actOnUp() {
   Log.verbose("%l ProgramChangeButton actOnUp" CR, millis());
-  switchLED(m_ledIndex, CRGB::Black);
+  switchLed(m_ledIndex, CRGB::Black);
 }
 
 void ProgramChangeButton::actOnLongUp() {
   Log.verbose("%l ProgramChangeButton actOnLongUp" CR, millis());
-  switchLED(m_ledIndex, CRGB::Black);
+  switchLed(m_ledIndex, CRGB::Black);
 }
 
 void ProgramChangeButton::actOnClock() {}

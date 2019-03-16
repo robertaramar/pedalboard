@@ -22,7 +22,7 @@ void DrumtrackButton::actOnDown() {
 
 void DrumtrackButton::actOnLongDown() {
   Log.verbose("%l DrumtrackButton actOnLongDown" CR, millis());
-  switchLED(m_ledIndex, CRGB::Blue);
+  switchLed(m_ledIndex, CRGB::Blue);
   m_currentColorCode = CRGB::Blue;
 }
 
@@ -38,10 +38,10 @@ void DrumtrackButton::actOnLongUp() {
 void DrumtrackButton::actOnClock() {
   if (m_isRunning) {
     if (m_currentClock++ == 0) {
-      switchLED(m_ledIndex, m_currentColorCode);
+      switchLed(m_ledIndex, m_currentColorCode);
     }
     if (m_currentClock == 6) {
-      switchLED(m_ledIndex, CRGB::Black);
+      switchLed(m_ledIndex, CRGB::Black);
     }
     if (m_currentClock >= 24) {
       m_currentClock = 0;
@@ -58,13 +58,13 @@ void DrumtrackButton::switchDrumTrack(boolean on) {
   if (on) {
     m_drumTrackSysEx[sizeof(m_drumTrackSysEx) - 1] = 0x01;
     midiS.sendSysEx(sizeof(m_drumTrackSysEx), m_drumTrackSysEx);
-    switchLED(m_ledIndex, CRGB::Green);
+    switchLed(m_ledIndex, CRGB::Green);
     m_currentColorCode = CRGB::Green;
     m_currentClock = 0;
   } else {
     m_drumTrackSysEx[sizeof(m_drumTrackSysEx) - 1] = 0x00;
     midiS.sendSysEx(sizeof(m_drumTrackSysEx), m_drumTrackSysEx);
-    switchLED(m_ledIndex, CRGB::Black);
+    switchLed(m_ledIndex, CRGB::Black);
   }
   m_isRunning = on;
 }

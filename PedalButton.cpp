@@ -20,8 +20,7 @@ PedalButton::PedalButton(int8_t buttonPin, int8_t ledIndex) {
  */
 void PedalButton::init() {
   Log.verbose("Pedalbutton init" CR);
-  pinMode(m_buttonPin, INPUT_PULLUP);
-  m_debouncer = Bounce();
+  m_debouncer = BounceShiftIn();
   m_debouncer.attach(m_buttonPin);
   m_debouncer.interval(BOUNCE_INTERVAL);
 }

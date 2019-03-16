@@ -30,20 +30,20 @@
 /**
  * Button pins
  */
-#define BUTTON_MODE 2
-#define BUTTON_CTL 3
-#define BUTTON_BANK_UP 4
-#define BUTTON_BANK_DOWN 5
-#define BUTTON_01 6
-#define BUTTON_02 7
-#define BUTTON_03 8
-#define BUTTON_04 9
-#define BUTTON_05 10
-#define BUTTON_06 11
-#define BUTTON_07 12
-#define BUTTON_08 13
-#define BUTTON_09 14
-#define BUTTON_10 15
+#define BUTTON_MODE 14
+#define BUTTON_CTL 11
+#define BUTTON_BANK_UP 12
+#define BUTTON_BANK_DOWN 13
+#define BUTTON_01 0
+#define BUTTON_02 1
+#define BUTTON_03 2
+#define BUTTON_04 3
+#define BUTTON_05 4
+#define BUTTON_06 5
+#define BUTTON_07 6
+#define BUTTON_08 7
+#define BUTTON_09 9
+#define BUTTON_10 10
 
 /**
  * Analog input pin for the volume pedal.
@@ -145,11 +145,21 @@ void setup() {
     pedalButtons[i]->init();
   }
 
+  // setup the shift-in register pins.
+  BounceShiftIn::setup(13, 14, 15);
+
   Log.verbose("setup done" CR);
 }
 
+static long themillis = 0;
+
 void loop() {
   midiS.read();
+  uint16_t currentState = BounceShiftIn::loop();
+  if (millis() - themillis > 1000) {
+    Log.verbose("currentState = %B" CR, currentState, 0);
+    themillis = millis();
+  }
   for (int i = 0; i < BUTTON_COUNT; i++) {
     pedalButtons[i]->loop();
   }
@@ -181,7 +191,18 @@ void handleControlChange(byte channel, byte number, byte value) {
 /**
  * Global method to change LED colors, used by the button methods.
  */
-void switchLED(int ledIndex, CRGB colorCode) {
+void switchLed(int ledIndex, CRGB colorCode) {
+  if (colorCode.r == colorCode.g == colorCode.b == 0) {
+    // switch LED off
+  } else {
+    // switch LED on
+  }
+}
+
+/**
+ * Global method to change LED colors, used by the button methods.
+ */
+void switchRgbLed(int ledIndex, CRGB colorCode) {
   if (leds[ledIndex] != colorCode) {
     leds[ledIndex] = colorCode;
     FastLED.show();

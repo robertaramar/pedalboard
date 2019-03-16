@@ -47,7 +47,7 @@ void KarmaSceneButton::actOnLongUp() {
 }
 
 void KarmaSceneButton::actOnClock() {
-  switchLED(m_ledIndex, m_colorCodes[m_currentScene]);
+  switchLed(m_ledIndex, m_colorCodes[m_currentScene]);
 }
 
 void KarmaSceneButton::actOnProgramChange(byte channel, byte number) {}

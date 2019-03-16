@@ -14,24 +14,24 @@ MomentaryButton::MomentaryButton(int8_t buttonPin, int8_t ledIndex)
 
 void MomentaryButton::actOnDown() {
   Log.verbose("%l MomentaryButton actOnDown" CR, millis());
-  switchLED(m_ledIndex, CRGB::Red);
+  switchLed(m_ledIndex, CRGB::Red);
   midiS.sendNoteOn(50, 71, 1);
 }
 
 void MomentaryButton::actOnLongDown() {
   Log.verbose("%l MomentaryButton actOnLongDown" CR, millis());
-  switchLED(m_ledIndex, CRGB::Green);
+  switchLed(m_ledIndex, CRGB::Green);
 }
 
 void MomentaryButton::actOnUp() {
   Log.verbose("%l MomentaryButton actOnUp" CR, millis());
-  switchLED(m_ledIndex, CRGB::Blue);
+  switchLed(m_ledIndex, CRGB::Blue);
   midiS.sendNoteOff(50, 71, 1);
 }
 
 void MomentaryButton::actOnLongUp() {
   Log.verbose("%l MomentaryButton actOnLongUp" CR, millis());
-  switchLED(m_ledIndex, CRGB::Yellow);
+  switchLed(m_ledIndex, CRGB::Yellow);
 }
 
 void MomentaryButton::actOnClock() {}

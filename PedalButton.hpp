@@ -3,7 +3,7 @@
  *
  * Author: robert.schneider@aramar.de
  */
-#include <Bounce2.h>
+#include <BounceShiftIn.h>
 
 #pragma once
 
@@ -19,7 +19,7 @@ class PedalButton {
   int8_t m_buttonPin;  // physical pin of this button
   int8_t m_ledIndex;   // index into the LED array for this button
 
-  Bounce m_debouncer;         // Bounce object to manage button
+  BounceShiftIn m_debouncer;  // Bounce object to manage button
   ButtonState m_buttonState;  // Current button state
 
  public:
