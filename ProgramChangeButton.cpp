@@ -88,9 +88,9 @@ void ProgramChangeButton::switchProgram() {
     m_currentProgram = 0;
   }
 
-  midiS.sendControlChange(0, m_currentBank, KRONOS_CHANNEL);
-  midiS.sendControlChange(32, m_currentBankLSB, KRONOS_CHANNEL);
-  midiS.sendProgramChange(m_currentProgram, KRONOS_CHANNEL);
+  usbMIDI.sendControlChange(0, m_currentBank, KRONOS_CHANNEL);
+  usbMIDI.sendControlChange(32, m_currentBankLSB, KRONOS_CHANNEL);
+  usbMIDI.sendProgramChange(m_currentProgram, KRONOS_CHANNEL);
 
   Log.verbose("%l ProgramChangeButton switched to program %d" CR, millis(),
               m_currentProgram);

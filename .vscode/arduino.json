@@ -1,6 +1,6 @@
 {
     "sketch": "PedalBoard.ino",
-    "port": "/dev/ttyUSB1",
+    "port": "/dev/ttyACM0",
     "board": "arduino:avr:nano",
     "configuration": "cpu=atmega328old",
     "programmer": "AVRISP mkII"

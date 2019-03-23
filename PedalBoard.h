@@ -5,10 +5,17 @@
  */
 #pragma once
 #include <MIDI.h>
-#define FASTLED_INTERNAL
+
 //#define DISABLE_LOGGING
 #include <ArduinoLog.h>
+
+#define FASTLED_INTERNAL
 #include <FastLED.h>
+
+#define BOARD_NANO 0
+#define BOARD_TEENSY 1
+#define LOGGING 1
+
 #include <SoftwareSerial.h>
 
 /**
@@ -17,21 +24,6 @@
 #define KRONOS_CHANNEL 1
 
 /**
- * Switch on/off software serial to use/not use serial console
- */
-#define SOFTWARE_SERIAL 1
-
-/**
- * MIDI object to send/receive MIDI data.
- */
-#if SOFTWARE_SERIAL
-extern midi::MidiInterface<SoftwareSerial> midiS;
-#else
-extern midi::MidiInterface<HardwareSerial> midiS;
-#endif
-
-/**
  * Utility method to change the color of an LED (use CRGB::Black to switch off)
  */
 void switchLed(int ledIndex, CRGB colorCode);
-void switchLedRgb(int ledIndex, CRGB colorCode);

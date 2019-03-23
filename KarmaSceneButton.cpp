@@ -82,7 +82,7 @@ void KarmaSceneButton::switchKarmaScene() {
   Log.verbose("%l KarmaSceneButton switch to scene %d" CR, millis(),
               m_currentScene);
 
-  midiS.sendControlChange(85, m_currentScene, KRONOS_CHANNEL);
+  usbMIDI.sendControlChange(85, m_currentScene, KRONOS_CHANNEL);
   // m_karmaSwitchSysEx[sizeof(m_karmaSwitchSysEx) - 1] = m_currentScene;
-  // midiS.sendSysEx(sizeof(m_karmaSwitchSysEx), m_karmaSwitchSysEx);
+  // usbMIDI.sendSysEx(sizeof(m_karmaSwitchSysEx), m_karmaSwitchSysEx);
 }

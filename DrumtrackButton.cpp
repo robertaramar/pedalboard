@@ -57,13 +57,13 @@ void DrumtrackButton::actOnControlChange(byte channel, byte number,
 void DrumtrackButton::switchDrumTrack(boolean on) {
   if (on) {
     m_drumTrackSysEx[sizeof(m_drumTrackSysEx) - 1] = 0x01;
-    midiS.sendSysEx(sizeof(m_drumTrackSysEx), m_drumTrackSysEx);
+    usbMIDI.sendSysEx(sizeof(m_drumTrackSysEx), m_drumTrackSysEx);
     switchLed(m_ledIndex, CRGB::Green);
     m_currentColorCode = CRGB::Green;
     m_currentClock = 0;
   } else {
     m_drumTrackSysEx[sizeof(m_drumTrackSysEx) - 1] = 0x00;
-    midiS.sendSysEx(sizeof(m_drumTrackSysEx), m_drumTrackSysEx);
+    usbMIDI.sendSysEx(sizeof(m_drumTrackSysEx), m_drumTrackSysEx);
     switchLed(m_ledIndex, CRGB::Black);
   }
   m_isRunning = on;

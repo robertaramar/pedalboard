@@ -13,30 +13,30 @@ MomentaryButton::MomentaryButton(int8_t buttonPin, int8_t ledIndex)
 }
 
 void MomentaryButton::actOnDown() {
-  Log.verbose("%l MomentaryButton actOnDown" CR, millis());
+  Log.verbose("%l MomentaryButton %d actOnDown" CR, millis(), m_ledIndex);
   switchLed(m_ledIndex, CRGB::Red);
-  midiS.sendNoteOn(50, 71, 1);
+  usbMIDI.sendNoteOn(50 + m_ledIndex, 71, 1);
 }
 
 void MomentaryButton::actOnLongDown() {
-  Log.verbose("%l MomentaryButton actOnLongDown" CR, millis());
+  Log.verbose("%l MomentaryButton %d actOnLongDown" CR, millis(), m_ledIndex);
   switchLed(m_ledIndex, CRGB::Green);
 }
 
 void MomentaryButton::actOnUp() {
-  Log.verbose("%l MomentaryButton actOnUp" CR, millis());
-  switchLed(m_ledIndex, CRGB::Blue);
-  midiS.sendNoteOff(50, 71, 1);
+  Log.verbose("%l MomentaryButton %d actOnUp" CR, millis(), m_ledIndex);
+  switchLed(m_ledIndex, CRGB::Black);
+  usbMIDI.sendNoteOff(50 + m_ledIndex, 71, 1);
 }
 
 void MomentaryButton::actOnLongUp() {
-  Log.verbose("%l MomentaryButton actOnLongUp" CR, millis());
-  switchLed(m_ledIndex, CRGB::Yellow);
+  Log.verbose("%l MomentaryButton %d actOnLongUp" CR, millis(), m_ledIndex);
+  switchLed(m_ledIndex, CRGB::Black);
+  usbMIDI.sendNoteOff(50 + m_ledIndex, 71, 1);
 }
 
 void MomentaryButton::actOnClock() {}
 
 void MomentaryButton::actOnProgramChange(byte channel, byte number) {}
 
-void MomentaryButton::actOnControlChange(byte channel, byte number,
-                                         byte value) {}
+void MomentaryButton::actOnControlChange(byte channel, byte number, byte value) {}
