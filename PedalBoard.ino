@@ -4,6 +4,7 @@
  * Author: robert.schneider@aramar.de
  */
 
+#include "AnalogControl.hpp"
 #include "DrumtrackButton.hpp"
 #include "KarmaSceneButton.hpp"
 #include "LedController.hpp"
@@ -41,6 +42,7 @@
 // PedalButton pedalButtons[BUTTON_COUNT];
 
 PedalButton *pedalButtons[16];
+AnalogControl *analogControl;
 
 LedController *ledController = new LedController();
 
@@ -92,6 +94,9 @@ void setup() {
       ProgramChangeMode::ProgramDown, 4, BUTTON_06, LED_BUTTON_06);
   */
 
+  /**
+   * Initialize all pedal buttons and call their init methods.
+   */
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_01, LED_BUTTON_01);
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_02, LED_BUTTON_02);
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_03, LED_BUTTON_03);
@@ -109,6 +114,12 @@ void setup() {
     pedalButtons[i]->init();
   }
 
+  /**
+   * Initialize the analog control for the pedal and call its init methods.
+   */
+  analogControl = new AnalogControl();
+  analogControl->init();
+
   // Initialize the shift-in register to obtain button states
   BounceShiftIn::setup(15, 14, 13);
 
@@ -121,14 +132,19 @@ static long themillis = 0;
 
 void loop() {
   usbMIDI.read();
+
   uint16_t currentState = BounceShiftIn::loop();
+
   if (millis() - themillis > 1000) {
     Log.verbose("currentState = %B" CR, currentState, 0);
     themillis = millis();
   }
+
   for (int i = 0; i < numberOfButtons; i++) {
     pedalButtons[i]->loop();
   }
+  analogControl->loop();
+
   usbMIDI.read();
 }
 
