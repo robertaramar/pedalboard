@@ -81,22 +81,19 @@ void setup() {
   usbMIDI.begin();
 
   // Start button assignment
-  // pedalButtons[numberOfButtons++] = new DrumtrackButton(BUTTON_01,
-  // LED_BUTTON_01);
-  /*
-  pedalButtons[numberOfButtons++] = new KarmaSceneButton(
-      KarmaSwitchMode::KarmaUp, 4, BUTTON_02, LED_BUTTON_02);
-  pedalButtons[numberOfButtons++] = new KarmaSceneButton(
-      KarmaSwitchMode::KarmaDown, 4, BUTTON_05, LED_BUTTON_05);
-  pedalButtons[numberOfButtons++] = new ProgramChangeButton(
-      ProgramChangeMode::ProgramUp, 4, BUTTON_03, LED_BUTTON_03);
-  pedalButtons[numberOfButtons++] = new ProgramChangeButton(
-      ProgramChangeMode::ProgramDown, 4, BUTTON_06, LED_BUTTON_06);
-  */
+  pedalButtons[numberOfButtons++] = new DrumtrackButton(BUTTON_01, LED_BUTTON_01);
+  pedalButtons[numberOfButtons++] =
+      new KarmaSceneButton(KarmaSwitchMode::KarmaUp, 4, BUTTON_02, LED_BUTTON_02);
+  pedalButtons[numberOfButtons++] =
+      new KarmaSceneButton(KarmaSwitchMode::KarmaDown, 4, BUTTON_06, LED_BUTTON_06);
+  pedalButtons[numberOfButtons++] =
+      new ProgramChangeButton(ProgramChangeMode::ProgramUp, 4, BUTTON_03, LED_BUTTON_03);
+  pedalButtons[numberOfButtons++] =
+      new ProgramChangeButton(ProgramChangeMode::ProgramDown, 4, BUTTON_07, LED_BUTTON_07);
 
   /**
    * Initialize all pedal buttons and call their init methods.
-   */
+   *
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_01, LED_BUTTON_01);
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_02, LED_BUTTON_02);
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_03, LED_BUTTON_03);
@@ -110,6 +107,8 @@ void setup() {
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_09, LED_BUTTON_09);
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_10, LED_BUTTON_10);
   pedalButtons[numberOfButtons++] = new MomentaryButton(BUTTON_BANK_UP, LED_BUTTON_BANK_UP);
+  */
+
   for (int i = 0; i < numberOfButtons; i++) {
     pedalButtons[i]->init();
   }
