@@ -12,26 +12,24 @@ byte DrumtrackButton::m_drumTrackSysEx[] = {0x42, 0x30, 0x68, 0x6e, 0x01, 0x00,
 
 DrumtrackButton::DrumtrackButton(int8_t buttonPin, int8_t ledIndex)
     : PedalButton(buttonPin, ledIndex) {
-  Log.verbose("DrumtrackButton constructor" CR);
+  Log.trace("DrumtrackButton constructor" CR);
 }
 
 void DrumtrackButton::actOnDown() {
-  Log.verbose("%l DrumtrackButton actOnDown" CR, millis());
+  Log.trace("%l DrumtrackButton actOnDown" CR, millis());
   switchDrumTrack(!m_isRunning);
 }
 
 void DrumtrackButton::actOnLongDown() {
-  Log.verbose("%l DrumtrackButton actOnLongDown" CR, millis());
+  Log.trace("%l DrumtrackButton actOnLongDown" CR, millis());
   switchLed(m_ledIndex, CRGB::Blue);
   m_currentColorCode = CRGB::Blue;
 }
 
-void DrumtrackButton::actOnUp() {
-  Log.verbose("%l DrumtrackButton actOnUp" CR, millis());
-}
+void DrumtrackButton::actOnUp() { Log.trace("%l DrumtrackButton actOnUp" CR, millis()); }
 
 void DrumtrackButton::actOnLongUp() {
-  Log.verbose("%l DrumtrackButton actOnLongUp" CR, millis());
+  Log.trace("%l DrumtrackButton actOnLongUp" CR, millis());
   switchDrumTrack(false);
 }
 
@@ -49,10 +47,14 @@ void DrumtrackButton::actOnClock() {
   }
 }
 
-void DrumtrackButton::actOnProgramChange(byte channel, byte number) {}
+void DrumtrackButton::actOnProgramChange(byte channel, byte number) {
+  if (channel == KRONOS_CHANNEL) {
+    switchDrumTrack(false);
+    Log.trace("%l DrumtrackButton actOnProgramChange" CR, millis());
+  }
+}
 
-void DrumtrackButton::actOnControlChange(byte channel, byte number,
-                                         byte value) {}
+void DrumtrackButton::actOnControlChange(byte channel, byte number, byte value) {}
 
 void DrumtrackButton::switchDrumTrack(boolean on) {
   if (on) {

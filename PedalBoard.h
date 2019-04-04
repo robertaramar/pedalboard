@@ -24,6 +24,11 @@
 #define KRONOS_CHANNEL 1
 
 /**
+ * Method to notify buttons of program change.
+ */
+void handleProgramChange(byte channel, byte number);
+
+/**
  * Utility method to change the color of an LED (use CRGB::Black to switch off)
  */
 void switchLed(int ledIndex, CRGB colorCode);

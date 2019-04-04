@@ -65,7 +65,7 @@ void setup() {
   //       this will significantly reduce your project size
 #if LOGGING
   Serial.begin(115000);
-  Log.begin(LOG_LEVEL_VERBOSE, &Serial);
+  Log.begin(LOG_LEVEL_TRACE, &Serial);
 #else
   Log.begin(LOG_LEVEL_SILENT, &Serial);
 #endif
